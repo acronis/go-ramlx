@@ -4,14 +4,16 @@ uses:
   scalar: scalar.raml
 
 annotationTypes:
-
   overridable:
     type: boolean
     description: >
-      Indicates that new compliant schema could be x.ylied to the property in derived types.
-      A new compliant schema could be x.ylied to the property in derived types. By default, all fields are not overridable.
-      If an optional field marked by overridable is not presented in inherited type that means such field should not be presented
-      in instances of such type.
+      Indicates that a property can be overridden in derived types. 
+      Derived type can add a new properties or change existing properties of the base type with compliant schema.
+      By default, all properties of CTIType are not overridable.
+      If an optional property marked by overridable is not presented in inherited type 
+      that means such property should not be presented in instances of such type.`
+
+      TODO add more clear description when annotation is used for the type itself or for the properties of the type.
     allowedTargets: TypeDeclaration
 
 types:
@@ -47,7 +49,7 @@ types:
     maxLength: 1024
     pattern: ^cti((\.([a-z][a-z0-9_]*))|\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?(~(([a-z][a-z0-9_]*)|([a-z][a-z0-9_]*)\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?)*\*$|^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
     description: |
-      CTI with wildcard support, where the wilcard `*` can only be used as the final character of a segment.
+      CTI with wildcard support, where the wildcard `*` can only be used as the final character of a segment.
     examples:
       1: cti.x.y.wr.zzz.v1.0
       2: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.0
@@ -79,10 +81,8 @@ types:
     maxLength: 1024
     pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?@[\w.]+$
     description: |
-      To reference attributes in CTI, use x.yath notation separated by `@`, with object properties divided by `.`.
-      The target property x.years at the end of this path. For instance:
-
-      Given a some browser object like:
+      Used to reference attributes in CTI instances, dot separated string after `@` sign is used to address specific properties.
+      For instance for the following object schema:
       ```JSON
         {
           "id": "0598cb6d-0a5d-4260-b918-0b522e42eb85",
@@ -95,11 +95,9 @@ types:
         }
       ```
 
-      * To access the "component" attribute, use @attributes.browser.component.
-      * To retrieve the "id" attribute, specify @id.
-      * For the "version" attribute, use @attributes.version.
-
-      This notation ensures precise and structured access to specific properties.
+      * "component" property could be addressed with `@attributes.browser.component`.
+      * "id" property could be addressed with `@id`.
+      * "version" property could be addressed with  `@attributes.version`.
     examples:
       1: cti.x.y.browser.v1.0@attributes.browser.component
       2: cti.x.y.browser.v1.0@attributes.version
@@ -107,16 +105,37 @@ types:
   
   CTIType:
     type: object
-    description: Used to define a CTI type.
+    description: >
+      Base type to define a CTI type. 
+
+      TODO add more details on displayName and description, 
+      also define inheritance rules, i.e. that multiple inheritance is not allowed.
+
+      Also it is worth mentioning that all properties of CTIType are not overridable by default.
+
     facets:
       cti: CTI
+
       final?: 
         type: boolean
+        description: >
+          Indicates that a type cannot be inherited by other types or instantiated with CTI entity.
+          By default, all types are inheritable.
         default: true
+
       overridable?:
         type: boolean
-        default: false
+        description: >
+          TODO
   
+  InstanceID:
+    type: CTI
+    description: Used to identify an instance of a CTI type.
+  
+  TypeID:
+    type: CTI
+    description: Used to identify a CTI type of an instance.
+
   CTIReference:
     type: InstanceID
     facets:
@@ -126,7 +145,7 @@ types:
   CTISchema:
     type: object
     facets:
-      cti: CTI | CTI[]
+      cti: CTI | CTI[] | CTIAttribute | CTIAttribute[]
     description: Used to define a schema of a property in a CTI type related to another CTI type.
   
   CTIDescription:
@@ -138,11 +157,3 @@ types:
   CTIDisplayName:
     type: scalar.string256
     description: Used to display a human-readable name of a CTI instance.
-  
-  InstanceID:
-    type: CTI
-    description: Used to identify an instance of a CTI type.
-  
-  TypeID:
-    type: CTI
-    description: Used to identify a CTI type of an instance.

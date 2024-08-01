@@ -1,8 +1,29 @@
 #%RAML 1.0 Library
-
-# This library defines a set of common scalar types
+#
+# Common scalar types and their descriptions.
+#
 
 types:
+
+  # Date and time types
+
+  duration:
+    type: string
+    description: |
+      A duration of time in the ISO 8601 format.
+      The format is `PnYnMnDTnHnMnS` where:
+      - `P` is the duration designator (for period)
+      - `nY` is the number of years
+      - `nM` is the number of months
+      - `nD` is the number of days
+      - `T` is the time designator (required if you are going to specify hours, minutes, or seconds)
+      - `nH` is the number of hours
+      - `nM` is the number of minutes
+      - `nS` is the number of seconds
+    pattern: ^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$
+    examples:
+    1: P3Y6M4DT12H30M5S # represents a duration of three years, six months, four days, twelve hours, thirty minutes, and five seconds.
+    2: PT1H30M          # represents a duration of one hour and thirty minutes.
 
   # Strings with different lengths
 
@@ -41,21 +62,6 @@ types:
     description: The string value with maximum length of 512 characters.
     maxLength: 512
 
-  string1K: string1024
-
-  string2K: string2048
-
-  string4K: string4096
-
-  string8K: string8192
-
-  string16K: string16384
-
-  string32K: string32768
-
-  # It is not recommended to use strings longer than 64K
-  string64K: string65536
-
   string1024:
     type: string
     description: The string value with maximum length of 1024 characters.
@@ -89,7 +95,15 @@ types:
   string65536:
     type: string
     description: The string value with maximum length of 65536 characters.
-    maxLength: 65536
+    maxLength: 65536 # It is not recommended to use strings longer than 64K
+
+  string1K: string1024
+  string2K: string2048
+  string4K: string4096
+  string8K: string8192
+  string16K: string16384
+  string32K: string32768
+  string64K: string65536
 
   uuid:
     type: string
