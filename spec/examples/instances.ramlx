@@ -1,0 +1,16 @@
+#%RAMLx 1.0 Instances
+
+cti.x.y.company.v1.0:
+  - name: Microsoft
+    id: cti.x.y.company.v1.0~x.y.microsoft.v1.0
+    description: "Microsoft Corporation"
+  - name: Apple
+    id: cti.x.y.company.v1.0~x.y.apple.v1.0
+    description: "Apple Inc."
+  - name: Google
+    id: cti.x.y.company.v1.0~x.y.google.v1.0
+    owned_by: cti.x.y.company.v1.0~x.y.alphabet.v1.0
+    description: "Google LLC"
+  - name: Alphabet
+    id: cti.x.y.company.v1.0~x.y.alphabet.v1.0
+    description: "Alphabet Inc."

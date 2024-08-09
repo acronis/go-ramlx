@@ -1,0 +1,216 @@
+#%RAML 1.0 Library
+#
+# Common scalar types and their descriptions.
+#
+
+types:
+
+  # Date and time types
+
+  duration:
+    type: string
+    description: |
+      A duration of time in the ISO 8601 format.
+      The format is `PnYnMnDTnHnMnS` where:
+      - `P` is the duration designator (for period)
+      - `nY` is the number of years
+      - `nM` is the number of months
+      - `nD` is the number of days
+      - `T` is the time designator (required if you are going to specify hours, minutes, or seconds)
+      - `nH` is the number of hours
+      - `nM` is the number of minutes
+      - `nS` is the number of seconds
+    pattern: ^P(\d+Y)?(\d+M)?(\d+D)?(T(\d+H)?(\d+M)?(\d+S)?)?$
+    examples:
+      1: P3Y6M4DT12H30M5S # represents a duration of three years, six months, four days, twelve hours, thirty minutes, and five seconds.
+      2: PT1H30M          # represents a duration of one hour and thirty minutes.
+
+  # Strings with different lengths
+
+  string8:
+    type: string
+    description: The string value with maximum length of 8 characters.
+    maxLength: 8
+
+  string16:
+    type: string
+    description: The string value with maximum length of 16 characters.
+    maxLength: 16
+
+  string32:
+    type: string
+    description: The string value with maximum length of 32 characters.
+    maxLength: 32
+
+  string64:
+    type: string
+    description: The string value with maximum length of 64 characters.
+    maxLength: 64
+
+  string128:
+    type: string
+    description: The string value with maximum length of 128 characters.
+    maxLength: 128
+
+  string256:
+    type: string
+    description: The string value with maximum length of 256 characters.
+    maxLength: 256
+
+  string512:
+    type: string
+    description: The string value with maximum length of 512 characters.
+    maxLength: 512
+
+  string1024:
+    type: string
+    description: The string value with maximum length of 1024 characters.
+    maxLength: 1024
+
+  string2048:
+    type: string
+    description: The string value with maximum length of 2048 characters.
+    maxLength: 2048
+
+  string4096:
+    type: string
+    description: The string value with maximum length of 4096 characters.
+    maxLength: 4096
+
+  string8192:
+    type: string
+    description: The string value with maximum length of 8192 characters.
+    maxLength: 8192
+
+  string16384:
+    type: string
+    description: The string value with maximum length of 16384 characters.
+    maxLength: 16384
+
+  string32768:
+    type: string
+    description: The string value with maximum length of 32768 characters.
+    maxLength: 32768
+
+  string65536:
+    type: string
+    description: The string value with maximum length of 65536 characters.
+    maxLength: 65536 # It is not recommended to use strings longer than 64K
+
+  string1K: string1024
+  string2K: string2048
+  string4K: string4096
+  string8K: string8192
+  string16K: string16384
+  string32K: string32768
+  string64K: string65536
+
+  uuid:
+    type: string
+    maxLength: 36
+    minLength: 36
+    pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+
+  # Integers with different ranges, Go-style
+
+  uint8:
+    type: integer
+    maximum: 255
+    minimum: 0
+    description: "Unsigned 8-bit integer"
+
+  uint16:
+    type: integer
+    maximum: 65535
+    minimum: 0
+    description: "Unsigned 16-bit integer"
+
+  uint32:
+    type: integer
+    maximum: 4294967295
+    minimum: 0
+    description: "Unsigned 32-bit integer"
+
+  uint64:
+    type: integer
+    maximum: 18446744073709551615
+    minimum: 0
+    description: "Unsigned 64-bit integer"
+
+  int8:
+    type: integer
+    maximum: 127
+    minimum: -128
+    description: "Signed 8-bit integer"
+
+  int16:
+    type: integer
+    maximum: 32767
+    minimum: -32768
+    description: "Signed 16-bit integer"
+
+  int32:
+    type: integer
+    maximum: 2147483647
+    minimum: -2147483648
+    description: "Signed 32-bit integer"
+
+  int64:
+    type: integer
+    maximum: 9223372036854775807
+    minimum: -9223372036854775808
+    description: "Signed 64-bit integer"
+
+  # Floating point numbers with different precisions, Go-style
+
+  float8:
+    type: number
+    format: float
+    description: "8-bit floating point number"
+    maximum: 127
+    minimum: -128
+
+  float16:
+    type: number
+    format: float
+    description: "16-bit floating point number"
+    maximum: 65504
+    minimum: -65504
+
+  float32:
+    type: number
+    format: float
+    description: "32-bit floating point number"
+    maximum: 3.4028235e+38
+    minimum: -3.4028235e+38
+    examples:
+      1: 3.14159
+      2: 1.0e-10
+
+  float64:
+    type: number
+    format: double
+    description: "64-bit floating point number"
+    maximum: 1.7976931348623157e+308
+    minimum: -1.7976931348623157e+308
+    examples:
+      1: 3.14159
+      2: 1.0e-10
+
+  # Byte and rune types, Go-style
+
+  byte: int8
+
+  rune: int32
+
+  # Boolean types
+
+  True:
+    type: boolean
+    enum: [true]
+    description: "Boolean value `true` only"
+
+  False:
+    type: boolean
+    enum: [false]
+    description: "Boolean value `false` only"

@@ -1,0 +1,159 @@
+#%RAML 1.0 Library
+
+uses:
+  scalar: scalar.raml
+
+annotationTypes:
+  overridable:
+    type: boolean
+    description: >
+      Indicates that a property can be overridden in derived types. 
+      Derived type can add a new properties or change existing properties of the base type with compliant schema.
+      By default, all properties of CTIType are not overridable.
+      If an optional property marked by overridable is not presented in inherited type 
+      that means such property should not be presented in instances of such type.`
+
+      TODO add more clear description when annotation is used for the type itself or for the properties of the type.
+    allowedTargets: TypeDeclaration
+
+types:
+  CTI:
+    type: string
+    pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+    maxLength: 1024
+    description: |
+      Identifier used in CTI Package to uniquely identify an entity either type or instance.
+
+      Generic format - `cti.<ctx>[~<ctx>]*[~(<ctx>|<uuid>)]`
+
+      * `<ctx>` - `<vendor>.<package>.<name>.v<major>.<minor>`
+      * `<vendor>` - vendor's short code (max 50 characters)
+      * `<package>` - package's short code (max 50 characters)
+      * `<name>` - entity's name (max 128 characters), may include `.` and `_` to be used for structuring
+      * `v<major>.<minor>` - entity's version
+
+      Better regex pattern (for advanced regex processors)
+        `^cti\.(?'ctx'[a-z][a-z0-9_]{0,49}\.[a-z][a-z0-9_]{0,49}\.[a-z][a-z0-9_.]{1,127}\.v[\d]+\.[\d]+)(~(?&ctx))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$`
+
+    examples:
+      1: cti.x.y.xx.v1.0
+      2: cti.x.y.xx.v1.0~x.y.name.v1.23
+      3: cti.x.y.xx.v1.0~6e4f419f-4bf7-494f-a4b5-3e95eb464fc5
+      4: cti.x.y.xx.v1.0~vendor.x.y.yy.v1.0
+      5: cti.x.y.yy.v1.0~x.y._.v1.0
+      6: cti.x.y.yy.v1.0~x.y.zzz.v1.0
+      7: cti.x.y.zz.v1.0~my_vendor.my_package.zzz.v1.0
+
+  CTIWildcard:
+    type: string
+    maxLength: 1024
+    pattern: ^cti((\.([a-z][a-z0-9_]*))|\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?(~(([a-z][a-z0-9_]*)|([a-z][a-z0-9_]*)\.)?(\.([a-z][a-z0-9_]*))?(\.([a-z_][a-z0-9_.]*))?(\.v(\d+|\d*\.\d*|\d*\.)?)?)*\*$|^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?$
+    description: |
+      CTI with wildcard support, where the wildcard `*` can only be used as the final character of a segment.
+    examples:
+      1: cti.x.y.wr.zzz.v1.0
+      2: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.0
+      3: cti.x.y.xx.v1.0~6e4f419f-4bf7-494f-a4b5-3e95eb464fc5
+      4: cti.*
+      5: cti.a.*
+      6: cti.x.y.*
+      7: cti.x.y.wr.*
+      8: cti.x.y.wr.zzz.*
+      9: cti.x.y.wr.zzz.v*
+      10: cti.x.y.wr.zzz.v1.*
+      11: cti.x.y.wr.zzz.v1.0~*
+      12: cti.x.y.wr.zzz.v1.0~a.*
+      13: cti.x.y.wr.zzz.v1.0~x.y.*
+      14: cti.x.y.wr.zzz.v1.0~x.y.z.*
+      15: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.*
+      16: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v*
+      17: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.*
+      18: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.0~*
+      19: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.0~a.*
+      20: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.0~x.y.*
+      21: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.0~x.y.bbb.*
+      22: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.0~x.y.bbb.ccc.*
+      23: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.0~x.y.bbb.ccc.v*
+      24: cti.x.y.wr.zzz.v1.0~x.y.z.aaa.v1.0~x.y.bbb.ccc.v1.*
+
+  CTIAttribute:
+    type: string
+    maxLength: 1024
+    pattern: ^cti\.([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+)(~([a-z][a-z0-9_]*\.[a-z][a-z0-9_]*\.[a-z_][a-z0-9_.]*\.v[\d]+\.[\d]+))*(~[0-9a-f]{8}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{4}\b-[0-9a-f]{12})?@[\w.]+$
+    description: |
+      Used to reference attributes in CTI instances, dot separated string after `@` sign is used to address specific properties.
+      For instance for the following object schema:
+      ```JSON
+        {
+          "id": "0598cb6d-0a5d-4260-b918-0b522e42eb85",
+          "attributes": {
+            "version": "v1.0",
+            "agent": {
+              "component": "Chrome"
+            }
+          }
+        }
+      ```
+
+      * "component" property could be addressed with `@attributes.browser.component`.
+      * "id" property could be addressed with `@id`.
+      * "version" property could be addressed with  `@attributes.version`.
+    examples:
+      1: cti.x.y.browser.v1.0@attributes.browser.component
+      2: cti.x.y.browser.v1.0@attributes.version
+      3: cti.x.y.browser.v1.0@id
+  
+  CTIType:
+    type: object
+    description: >
+      Base type to define a CTI type. 
+
+      TODO add more details on displayName and description, 
+      also define inheritance rules, i.e. that multiple inheritance is not allowed.
+
+      Also it is worth mentioning that all properties of CTIType are not overridable by default.
+
+    facets:
+      cti: CTI
+
+      final?: 
+        type: boolean
+        description: >
+          Indicates that a type cannot be inherited by other types or instantiated with CTI entity.
+          By default, all types are inheritable.
+        default: true
+
+      overridable?:
+        type: boolean
+        description: >
+          TODO
+  
+  InstanceID:
+    type: CTI
+    description: Used to identify an instance of a CTI type.
+  
+  TypeID:
+    type: CTI
+    description: Used to identify a CTI type of an instance.
+
+  CTIReference:
+    type: InstanceID
+    facets:
+      cti: CTIWildcard | CTIWildcard[]
+    description: Used to reference a CTI instance to another CTI instance.
+  
+  CTISchema:
+    type: object
+    facets:
+      cti: CTI | CTI[] | CTIAttribute | CTIAttribute[]
+    description: Used to define a schema of a property in a CTI type related to another CTI type.
+  
+  CTIDescription:
+    type: scalar.string2048
+    description: |
+      Used to provide a detailed description of a CTI instance.
+      The description should be a human-readable text that provides additional information about the instance.
+  
+  CTIDisplayName:
+    type: scalar.string256
+    description: Used to display a human-readable name of a CTI instance.

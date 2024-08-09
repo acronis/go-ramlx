@@ -1,0 +1,43 @@
+#%RAML 1.0 Library
+
+uses:
+  scalar: ../scalar.raml
+  cti: ../cti.raml
+
+types:
+
+  Company:
+    type: cti.CTIType
+    cti: cti.x.y.company.v1.0
+    final: false
+    properties:
+      name: cti.CTIDisplayName
+      id: cti.InstanceID
+      owned_by?:
+        type: cti.CTIReference
+        cti: cti.x.y.user.v1.0
+      description: cti.CTIDescription
+  
+  User:
+    type: cti.CTIType
+    cti: cti.x.y.user.v1.0
+    final: false
+    properties:
+      name: scalar.string256
+      id: scalar.uuid
+      type_id: cti.TypeID
+      company:
+        type: cti.CTISchema
+        cti: cti.x.y.company.v1.0
+      details:
+        type: any
+        (cti.overridable): true
+  
+  UserExt:
+    type: User
+    cti: cti.x.y.user.v1.0~x.y.ext.v1.0
+    final: true
+    properties:
+      details:
+        properties:
+          phone: scalar.string16
