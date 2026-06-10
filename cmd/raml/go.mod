@@ -1,6 +1,6 @@
 module github.com/acronis/go-raml/cmd/raml
 
-go 1.22
+go 1.22.6
 
 require (
 	github.com/acronis/go-raml/v3 v3.0.0
@@ -16,6 +16,7 @@ require (
 	github.com/antlr4-go/antlr/v4 v4.13.1 // indirect
 	github.com/bahlo/generic-list-go v0.2.0 // indirect
 	github.com/buger/jsonparser v1.1.2 // indirect
+	github.com/gertd/go-pluralize v0.2.1 // indirect
 	github.com/google/safeopen v0.0.0-20260327150837-43626d6f4685 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
